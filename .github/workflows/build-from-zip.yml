@@ -7,6 +7,7 @@ on:
     paths:
       - 'Kalle-Drecksbude-Spielprojekt-NEUER-DOWNLOAD.zip'
       - '.github/workflows/build-from-zip.yml'
+      - 'updates/v0.2/**'
 
 permissions:
   contents: read
@@ -36,6 +37,14 @@ jobs:
           sed -i '/^\[rendering\]$/a textures/vram_compression/import_etc2_astc=true' "$GAME_DIR/project.godot"
           grep -Fq "textures/vram_compression/import_etc2_astc=true" "$GAME_DIR/project.godot"
           echo "Godot project found: $GAME_DIR"
+
+      - name: Apply v0.2 character and behavior fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp updates/v0.2/Kalle.gd "$GAME_DIR/scripts/Kalle.gd"
+          cp updates/v0.2/apply_patch.py "$GAME_DIR/apply_patch.py"
+          python3 "$GAME_DIR/apply_patch.py"
 
       - name: Install Java
         uses: actions/setup-java@v4
@@ -95,18 +104,18 @@ jobs:
           set -euo pipefail
           cd "$GAME_DIR"
           mkdir -p build
-          godot --headless --path . --export-debug "Android" "build/KALLE-DRECKSBUDE-0.1-debug.apk" 2>&1 | tee /tmp/kalle-export.log
-          test -s build/KALLE-DRECKSBUDE-0.1-debug.apk
-          unzip -t build/KALLE-DRECKSBUDE-0.1-debug.apk | tail -1
+          godot --headless --path . --export-debug "Android" "build/KALLE-DRECKSBUDE-0.2-debug.apk" 2>&1 | tee /tmp/kalle-export.log
+          test -s build/KALLE-DRECKSBUDE-0.2-debug.apk
+          unzip -t build/KALLE-DRECKSBUDE-0.2-debug.apk | tail -1
           echo "Built APK:"
-          ls -lh build/KALLE-DRECKSBUDE-0.1-debug.apk
+          ls -lh build/KALLE-DRECKSBUDE-0.2-debug.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: KALLE-DRECKSBUDE-0.1-debug-APK
-          path: project-files/KALLE_DRECKSBUDE_0.1_Godot/build/KALLE-DRECKSBUDE-0.1-debug.apk
+          name: KALLE-DRECKSBUDE-0.2-debug-APK
+          path: project-files/KALLE_DRECKSBUDE_0.1_Godot/build/KALLE-DRECKSBUDE-0.2-debug.apk
           retention-days: 14
 
       - name: Upload build logs if failure
