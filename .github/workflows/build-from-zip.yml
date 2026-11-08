@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'KALLE_DRECKSBUDE_0.1_Godot_Projekt.zip'
+      - 'Kalle-Drecksbude-Spielprojekt-NEUER-DOWNLOAD.zip'
       - '.github/workflows/build-from-zip.yml'
 
 permissions:
@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 45
     env:
       GODOT_VERSION: '4.4.1'
-      ZIP_FILE: 'KALLE_DRECKSBUDE_0.1_Godot_Projekt.zip'
+      ZIP_FILE: 'Kalle-Drecksbude-Spielprojekt-NEUER-DOWNLOAD.zip'
       GAME_DIR: 'project-files/KALLE_DRECKSBUDE_0.1_Godot'
     steps:
       - name: Checkout
